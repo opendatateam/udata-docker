@@ -1,8 +1,9 @@
 uwsgi==2.0.21
 gevent==24.2.1
-udata==8.0.0
-udata-ckan==3.0.3
-udata-front==4.0.0
-udata-piwik==4.1.0
-udata-recommendations==3.1.5
-sentry-sdk[flask]==1.9.0
+/tmp/udata-10.0.4.dev0-py2.py3-none-any.whl
+# udata=10.0.4
+udata-ckan==4.0.0
+udata-front==6.0.3
+udata-piwik==4.1.1
+udata-recommendations==3.1.6
+sentry-sdk[flask]==2.9.0

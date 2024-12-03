@@ -27,6 +27,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Install udata and all known plugins
 COPY requirements.pip /tmp/requirements.pip
+COPY udata.whl /tmp/udata-10.0.4.dev0-py2.py3-none-any.whl
 RUN pip install -r /tmp/requirements.pip && pip check || pip install -r /tmp/requirements.pip
 RUN rm -r /root/.cache
 

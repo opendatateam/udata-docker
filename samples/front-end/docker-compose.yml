@@ -1,0 +1,56 @@
+services:
+  mongodb:
+    image: mongo:6.0.4
+    volumes:
+      - /Users/nicolaskempf/Documents/PythonDev/udata/data/db:/data/db
+    ports:
+      - "27017:27017"
+
+  redis:
+    image: redis
+    volumes:
+      - redis-data:/data
+    ports:
+    - "6379:6379"
+
+  udata:
+    build: ../..
+    links:
+      - mongodb:mongodb
+      - redis:redis
+    command: serve --host 0.0.0.0 --port 7000 --debugger --reload
+    environment:
+      - FLASK_DEBUG=true
+    volumes:
+      - udata-fs:/udata/fs
+    ports:
+      - "7000:7000"
+    expose:
+      - 7000
+  
+  proxy:
+    image: nginx:alpine-slim
+    ports:
+      - "7002:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+
+  datagouv-front:
+    image: datagouv-front-end:0.2.3
+    environment:
+      NUXT_PUBLIC_API_BASE: "http://dev.local:7000"
+    ports:
+      - "3000:3000"
+    expose:
+      - 3000
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 512M
+
+volumes:
+  udata-fs:
+  mongo-data:
+  redis-data:
+  nginx_cache:
