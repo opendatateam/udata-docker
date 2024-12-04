@@ -1,32 +1,41 @@
-version: '3'
-
 services:
   mongodb:
     image: mongo:6.0.4
+    networks:
+      - udata
     volumes:
       - mongo-data:/data/db
     ports:
-      - "27017:27017"
+      - "${UDATA_MONGODB_EXPOSED:-27017}:27017"
 
   redis:
     image: redis
+    networks:
+      - udata
     volumes:
       - redis-data:/data
     ports:
-    - "6379:6379"
+    - "${UDATA_REDIS_EXPOSED:-6379}:6379"
 
   udata:
     build: .
-    links:
-      - mongodb:mongodb
-      - redis:redis
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - udata
     command: serve --host 0.0.0.0 --debugger --reload
     environment:
       - FLASK_DEBUG=true
+      - UDATA_SETTINGS=/udata/udata.cfg
     volumes:
       - udata-fs:/udata/fs
+      - ./udata.cfg:/udata/udata.cfg
     ports:
-      - "7000:7000"
+      - "${UDATA_HTTP_EXPOSED:-7000}:7000"
+
+networks:
+  udata:
 
 volumes:
   udata-fs:
